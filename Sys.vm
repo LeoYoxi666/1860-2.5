@@ -98,14 +98,17 @@ function Sys.encode 2
 
     // 清除最高位并设置新校验位
     push local 0
-    push constant 32767
-    and             // 清除原最高位
+    push constant 32767  // 清除最高位
+    and
     push local 1
     push constant 0
     eq
     if-goto NO_SET
-    push constant 32768 // 0x8000 设置最高位
-    add
+    // 使用位操作设置最高位
+    push constant 1
+    push constant 15     // 左移15位得到最高位-32767(32768)
+    call Sys.shiftLeft 2
+    or                   // 用 OR 操作设置最高位
 
 label NO_SET
     return
